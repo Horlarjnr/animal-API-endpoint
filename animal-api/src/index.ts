@@ -35,8 +35,18 @@ const animalDatabase = {
   },
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
+app.get("/:animal", (req, res) => {
+  const animalName = req.params.animal.toLowerCase();
+  const animalInfo = animalDatabase[animalName as keyof typeof animalDatabase];
+
+  if (!animalInfo) {
+    return res.status(404).json({
+      error: "Animal Not Found",
+      message: `No information found for '${animalName}'. Try 'cat', 'dog', or 'elephant'.`,
+    });
+  }
+
+  res.json(animalInfo);
 });
 
 app.listen(PORT, () => {
